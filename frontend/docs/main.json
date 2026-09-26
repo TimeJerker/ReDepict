@@ -1,0 +1,23 @@
+{
+  "screen": "MenuDrawer",
+  "type": "Overlay",
+  "position": "right",
+  "width": 320,
+  "owner": "Frontend-2",
+  "figmaFrame": "Screens / Menu / Drawer",
+  "components": [
+    { "id": "close", "type": "IconButton", "icon": "x", "position": "top-right" },
+    {
+      "id": "nav",
+      "type": "Column",
+      "items": [
+        { "id": "item-draw", "type": "NavItem", "text": "Рисовать", "link": "/draw" },
+        { "id": "item-gallery", "type": "NavItem", "text": "Галерея", "link": "/gallery" },
+        { "id": "item-ai", "type": "NavItem", "text": "Помощь ИИ", "link": "/draw?chat=1" },
+        { "id": "item-profile", "type": "NavItem", "text": "Профиль", "link": "/profile" }
+      ]
+    },
+    { "id": "divider", "type": "Separator" },
+    { "id": "btn-exit", "type": "Button", "variant": "danger", "text": "Выйти", "action": "logout:/login" }
+  ]
+}
