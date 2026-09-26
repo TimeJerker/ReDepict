@@ -1,0 +1,38 @@
+{
+  "screen": "Gallery",
+  "route": "/gallery",
+  "owner": "Frontend-3",
+  "figmaFrame": "Screens / Gallery / Grid",
+  "layout": "header + filters + masonry-grid",
+  "components": [
+    { "id": "header", "type": "Header", "reuse": "home.header" },
+    {
+      "id": "filters",
+      "type": "Row",
+      "children": [
+        { "id": "search", "type": "Input", "placeholder": "Поиск рисунков" },
+        { "id": "sort", "type": "Select", "options": ["Новые", "Популярные", "Мои"] }
+      ]
+    },
+    {
+      "id": "grid",
+      "type": "MasonryGrid",
+      "columns": "auto",
+      "gap": 16,
+      "card": {
+        "type": "ImageCard",
+        "children": [
+          { "id": "thumb", "type": "Image" },
+          { "id": "title", "type": "Caption" },
+          { "id": "author", "type": "Avatar", "size": 24 }
+        ]
+      }
+    },
+    {
+      "id": "upload",
+      "type": "Dropzone",
+      "position": "floating-top-right",
+      "text": "Перетащите рисунок сюда"
+    }
+  ]
+}
