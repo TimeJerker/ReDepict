@@ -1,0 +1,25 @@
+{
+  "screen": "Register",
+  "type": "Modal",
+  "route": "/register (или модальное окно поверх /login)",
+  "owner": "Frontend-1",
+  "figmaFrame": "Screens / Register / Modal",
+  "layout": "overlay + centered-card",
+  "components": [
+    {
+      "id": "register-card",
+      "type": "Card",
+      "width": 400,
+      "padding": 32,
+      "children": [
+        { "id": "title", "type": "Heading", "text": "Регистрация" },
+        { "id": "input-name", "type": "Input", "label": "Имя", "placeholder": "Как вас зовут" },
+        { "id": "input-email", "type": "Input", "label": "Email", "placeholder": "you@mail.com" },
+        { "id": "input-password", "type": "Input", "label": "Пароль", "inputType": "password" },
+        { "id": "input-confirm", "type": "Input", "label": "Повторите пароль", "inputType": "password" },
+        { "id": "btn-create", "type": "Button", "variant": "primary", "text": "Создать аккаунт" },
+        { "id": "btn-cancel", "type": "Button", "variant": "ghost", "text": "Отмена" }
+      ]
+    }
+  ]
+}
