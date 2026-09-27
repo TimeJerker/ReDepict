@@ -1,0 +1,51 @@
+{
+  "screen": "Upload",
+  "route": "/upload",
+  "owner": "Frontend-1",
+  "figmaFrame": "Screens / Upload / Main",
+  "layout": "header + centered-card + footer",
+  "components": [
+    {
+      "id": "header",
+      "type": "Header",
+      "reuse": "home.header"
+    },
+    {
+      "id": "upload-card",
+      "type": "Card",
+      "width": 640,
+      "padding": 40,
+      "position": "center",
+      "children": [
+        { "id": "title", "type": "Heading", "level": 1, "text": "Загрузите рисунок" },
+        { "id": "subtitle", "type": "Paragraph", "text": "ИИ проанализирует работу и даст советы по улучшению" },
+        {
+          "id": "dropzone",
+          "type": "Dropzone",
+          "width": 560,
+          "height": 320,
+          "children": [
+            { "id": "upload-icon", "type": "Icon", "name": "upload-cloud", "size": 48 },
+            { "id": "dropzone-text", "type": "Paragraph", "text": "Перетащите фото сюда или нажмите для выбора" },
+            { "id": "formats", "type": "Caption", "text": "PNG, JPG · до 10 МБ" }
+          ]
+        },
+        { "id": "preview", "type": "Image", "visible": "after file selected", "maxHeight": 400 },
+        {
+          "id": "actions",
+          "type": "Row",
+          "children": [
+            { "id": "btn-clear", "type": "Button", "variant": "ghost", "text": "Удалить", "action": "clearFile", "visible": "after file selected" },
+            { "id": "btn-analyze", "type": "Button", "variant": "primary", "text": "Анализировать", "action": "go:/analysis", "visible": "after file selected" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "footer",
+      "type": "Footer",
+      "reuse": "home.footer"
+    }
+  ],
+  "notes": "Dropzone с валидацией формата и размера. После загрузки — превью и кнопки."
+}

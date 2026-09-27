@@ -1,0 +1,81 @@
+{
+  "screen": "Analysis",
+  "route": "/analysis",
+  "owner": "Frontend-2",
+  "figmaFrame": "Screens / Analysis / Result",
+  "layout": "header + split(preview 40% | analysis 60%) + footer",
+  "components": [
+    {
+      "id": "header",
+      "type": "Header",
+      "reuse": "home.header"
+    },
+    {
+      "id": "work-preview",
+      "type": "Panel",
+      "width": "40%",
+      "children": [
+        { "id": "work-image", "type": "Image", "caption": "Загруженный рисунок" },
+        { "id": "work-meta", "type": "Caption", "text": "Загружено 12.05.2025" },
+        { "id": "btn-reupload", "type": "Button", "variant": "ghost", "text": "Загрузить другое фото", "action": "go:/upload" }
+      ]
+    },
+    {
+      "id": "ai-analysis",
+      "type": "Panel",
+      "width": "60%",
+      "children": [
+        { "id": "analysis-title", "type": "Heading", "level": 2, "text": "Разбор от ИИ" },
+        {
+          "id": "analysis-sections",
+          "type": "List",
+          "gap": 24,
+          "items": [
+            {
+              "id": "section-composition",
+              "type": "AnalysisBlock",
+              "title": "Композиция",
+              "text": "Объект расположен слишком близко к краю. Попробуйте сместить его чуть ближе к центру.",
+              "status": "warning"
+            },
+            {
+              "id": "section-color",
+              "type": "AnalysisBlock",
+              "title": "Цвет",
+              "text": "Контраст между фоном и объектом слабый. Добавьте тени или используйте более тёмный тон для фона.",
+              "status": "warning"
+            },
+            {
+              "id": "section-technique",
+              "type": "AnalysisBlock",
+              "title": "Техника",
+              "text": "Штриховка аккуратная, но не хватает плавных переходов. Попробуйте растушёвку для смягчения линий.",
+              "status": "success"
+            },
+            {
+              "id": "section-summary",
+              "type": "AnalysisBlock",
+              "title": "Общий совет",
+              "text": "Хорошая работа! Основные точки роста — композиция и работа с контрастом.",
+              "status": "info"
+            }
+          ]
+        },
+        {
+          "id": "actions",
+          "type": "Row",
+          "children": [
+            { "id": "btn-save", "type": "Button", "variant": "primary", "text": "Сохранить в историю", "action": "saveToHistory" },
+            { "id": "btn-new", "type": "Button", "variant": "ghost", "text": "Разобрать ещё", "action": "go:/upload" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "footer",
+      "type": "Footer",
+      "reuse": "home.footer"
+    }
+  ],
+  "notes": "Слева — фото работы, справа — структурированный разбор. Секции с разным статусом (warning/success/info)."
+}

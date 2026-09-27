@@ -3,14 +3,14 @@
   "route": "/",
   "owner": "Frontend-2",
   "figmaFrame": "Screens / Home / Main",
-  "layout": "header + hero + features + footer",
+  "layout": "header + hero + how-it-works + footer",
   "components": [
     {
       "id": "header",
       "type": "Header",
       "children": [
         { "id": "logo", "type": "Logo", "link": "/" },
-        { "id": "nav", "type": "Nav", "items": ["Рисовать", "Галерея", "Помощь ИИ"] },
+        { "id": "nav", "type": "Nav", "items": ["Загрузить", "История"] },
         { "id": "user-avatar", "type": "Avatar", "menu": ["Профиль", "Выход"] }
       ]
     },
@@ -19,22 +19,21 @@
       "type": "Section",
       "align": "center",
       "children": [
-        { "id": "h1", "type": "Heading", "level": 1, "text": "Нарисуй что-то классное" },
-        { "id": "subtitle", "type": "Paragraph", "text": "ИИ поможет, подскажет и вдохновит" },
-        { "id": "btn-start", "type": "Button", "variant": "primary", "text": "Начать рисовать", "action": "go:/draw" }
+        { "id": "h1", "type": "Heading", "level": 1, "text": "Получите разбор своего рисунка от ИИ" },
+        { "id": "subtitle", "type": "Paragraph", "text": "Загрузите фото — нейросеть укажет на ошибки и подскажет, как улучшить" },
+        { "id": "btn-upload", "type": "Button", "variant": "primary", "text": "Загрузить рисунок", "action": "openUpload" }
       ]
     },
     {
-      "id": "features",
-      "type": "Grid",
+      "id": "how-it-works",
+      "type": "Steps",
       "columns": 3,
       "gap": 24,
-      "cards": [
-        { "icon": "brush", "title": "Своя кисть", "text": "Рисуй как хочешь" },
-        { "icon": "sparkles", "title": "Помощь ИИ", "text": "Советы в реальном времени" },
-        { "icon": "image", "title": "Галерея", "text": "Смотри работы других" }
+      "steps": [
+        { "number": "1", "title": "Загрузите фото", "text": "PNG или JPG, до 10 МБ" },
+        { "number": "2", "title": "ИИ анализирует", "text": "Разбор займёт несколько секунд" },
+        { "number": "3", "title": "Получите советы", "text": "Что улучшить и как именно" }
       ]
-    },
-    { "id": "footer", "type": "Footer", "content": "© 2025 ArtApp" }
+    }
   ]
 }
