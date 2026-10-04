@@ -1,81 +1,184 @@
 {
-  "screen": "Analysis",
-  "route": "/analysis",
+  "screen": "AnalysisChat",
+  "route": "/analysis/:id?",
   "owner": "Frontend-2",
-  "figmaFrame": "Screens / Analysis / Result",
-  "layout": "header + split(preview 40% | analysis 60%) + footer",
+  "figmaFrame": "Screens / Analysis / Chat",
+  "layout": "header + content(sidebar + chat-panel) + footer",
   "components": [
     {
       "id": "header",
       "type": "Header",
-      "reuse": "home.header"
-    },
-    {
-      "id": "work-preview",
-      "type": "Panel",
-      "width": "40%",
+      "reuse": "home.header",
       "children": [
-        { "id": "work-image", "type": "Image", "caption": "Загруженный рисунок" },
-        { "id": "work-meta", "type": "Caption", "text": "Загружено 12.05.2025" },
-        { "id": "btn-reupload", "type": "Button", "variant": "ghost", "text": "Загрузить другое фото", "action": "go:/upload" }
-      ]
-    },
-    {
-      "id": "ai-analysis",
-      "type": "Panel",
-      "width": "60%",
-      "children": [
-        { "id": "analysis-title", "type": "Heading", "level": 2, "text": "Разбор от ИИ" },
+        { "id": "logo", "type": "Logo", "link": "/" },
         {
-          "id": "analysis-sections",
-          "type": "List",
-          "gap": 24,
-          "items": [
+          "id": "nav",
+          "type": "Nav",
+          "children": [
             {
-              "id": "section-composition",
-              "type": "AnalysisBlock",
-              "title": "Композиция",
-              "text": "Объект расположен слишком близко к краю. Попробуйте сместить его чуть ближе к центру.",
-              "status": "warning"
-            },
-            {
-              "id": "section-color",
-              "type": "AnalysisBlock",
-              "title": "Цвет",
-              "text": "Контраст между фоном и объектом слабый. Добавьте тени или используйте более тёмный тон для фона.",
-              "status": "warning"
-            },
-            {
-              "id": "section-technique",
-              "type": "AnalysisBlock",
-              "title": "Техника",
-              "text": "Штриховка аккуратная, но не хватает плавных переходов. Попробуйте растушёвку для смягчения линий.",
-              "status": "success"
-            },
-            {
-              "id": "section-summary",
-              "type": "AnalysisBlock",
-              "title": "Общий совет",
-              "text": "Хорошая работа! Основные точки роста — композиция и работа с контрастом.",
-              "status": "info"
+              "id": "btn-upload-nav",
+              "type": "FilePicker",
+              "variant": "ghost",
+              "icon": "paperclip",
+              "text": "Загрузить",
+              "accept": "image/png, image/jpeg",
+              "maxSize": 10485760,
+              "requireAuth": true,
+              "action": "onFileSelected:go:/analysis"
             }
           ]
         },
         {
-          "id": "actions",
-          "type": "Row",
-          "children": [
-            { "id": "btn-save", "type": "Button", "variant": "primary", "text": "Сохранить в историю", "action": "saveToHistory" },
-            { "id": "btn-new", "type": "Button", "variant": "ghost", "text": "Разобрать ещё", "action": "go:/upload" }
+          "id": "user-avatar",
+          "type": "Avatar",
+          "requireAuth": true,
+          "fallbackIcon": "user",
+          "menu": [
+            {
+              "id": "btn-profile",
+              "type": "Button",
+              "variant": "ghost",
+              "icon": "user",
+              "text": "Профиль",
+              "action": "go:/profile"
+            },
+            {
+              "id": "btn-logout",
+              "type": "Button",
+              "variant": "danger",
+              "icon": "logout",
+              "text": "Выход",
+              "action": "logout:/login"
+            }
           ]
         }
       ]
     },
     {
-      "id": "footer",
-      "type": "Footer",
-      "reuse": "home.footer"
+      "id": "content",
+      "type": "Row",
+      "children": [
+        {
+          "id": "sidebar",
+          "type": "Sidebar",
+          "width": 300,
+          "background": "#F5F5F5",
+          "children": [
+            {
+              "id": "btn-new-work",
+              "type": "FilePicker",
+              "variant": "primary",
+              "icon": "plus",
+              "text": "Загрузить",
+              "accept": "image/png, image/jpeg",
+              "maxSize": 10485760,
+              "action": "onFileSelected:go:/analysis"
+            },
+            { "id": "divider", "type": "Separator" },
+            {
+              "id": "section-title",
+              "type": "Caption",
+              "text": "История",
+              "uppercase": true
+            },
+            {
+              "id": "works-list",
+              "type": "List",
+              "gap": 4,
+              "items": [
+                { "id": "work-item-1", "type": "WorkItem", "title": "Работа 12.05", "active": true,  "action": "go:/analysis/1" },
+                { "id": "work-item-2", "type": "WorkItem", "title": "Работа 08.05", "active": false, "action": "go:/analysis/2" },
+                { "id": "work-item-3", "type": "WorkItem", "title": "Работа 05.05", "active": false, "action": "go:/analysis/3" },
+                { "id": "work-item-4", "type": "WorkItem", "title": "Работа 04.05", "active": false, "action": "go:/analysis/4" },
+                { "id": "work-item-5", "type": "WorkItem", "title": "Работа 01.05", "active": false, "action": "go:/analysis/5" }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "chat-panel",
+          "type": "Column",
+          "children": [
+            {
+              "id": "chat-area",
+              "type": "ChatMessages",
+              "scroll": true,
+              "children": [
+                {
+                  "id": "message-user-1",
+                  "type": "MessageUser",
+                  "attach": { "type": "Image", "size": 240, "cornerRadius": 12 },
+                  "text": "Оцени композицию и подскажи, что улучшить в тенях",
+                  "background": "#E6F5EA",
+                  "alignment": "right"
+                },
+                {
+                  "id": "message-ai-1",
+                  "type": "MessageAI",
+                  "text": "Разбираю вашу работу.\n• Композиция: объект слишком близко к левому краю — попробуйте сместить ближе к центру.\n• Тени: слишком мягкие. Добавьте более тёмный тон под объектом — это усилит контраст.",
+                  "background": "#F5F5F5",
+                  "alignment": "left",
+                  "width": 600
+                },
+                {
+                  "id": "message-user-2",
+                  "type": "MessageUser",
+                  "text": "А как именно затемнить?",
+                  "background": "#E6F5EA",
+                  "alignment": "right"
+                },
+                {
+                  "id": "message-ai-2",
+                  "type": "MessageAI",
+                  "text": "Возьмите мягкую кисть и наложите тёмный тон в 2 слоя под объектом. Начните с самого тёмного и постепенно растушуйте к краям.",
+                  "background": "#F5F5F5",
+                  "alignment": "left",
+                  "width": 600
+                }
+              ]
+            },
+            {
+              "id": "input-bar",
+              "type": "InputBar",
+              "children": [
+                {
+                  "id": "input-row",
+                  "type": "Row",
+                  "gap": 12,
+                  "padding": 12,
+                  "background": "#F5F5F5",
+                  "cornerRadius": 12,
+                  "children": [
+                    {
+                      "id": "btn-attach",
+                      "type": "IconButton",
+                      "icon": "paperclip",
+                      "size": 32,
+                      "action": "openFilePicker"
+                    },
+                    {
+                      "id": "input",
+                      "type": "TextArea",
+                      "placeholder": "Написать сообщение...",
+                      "autoResize": true,
+                      "width": "fill"
+                    },
+                    {
+                      "id": "btn-send",
+                      "type": "IconButton",
+                      "icon": "arrow-right",
+                      "variant": "primary",
+                      "size": 40,
+                      "action": "sendMessage"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ],
-  "notes": "Слева — фото работы, справа — структурированный разбор. Секции с разным статусом (warning/success/info)."
+  "notes": "Sidebar с историей работ внутри чата. Клик по работе в sidebar → смена URL на /analysis/:id → загрузка соответствующей работы. Отдельный экран History не нужен."
 }

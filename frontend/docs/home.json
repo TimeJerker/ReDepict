@@ -10,8 +10,57 @@
       "type": "Header",
       "children": [
         { "id": "logo", "type": "Logo", "link": "/" },
-        { "id": "nav", "type": "Nav", "items": ["Загрузить", "История"] },
-        { "id": "user-avatar", "type": "Avatar", "menu": ["Профиль", "Выход"] }
+        {
+          "id": "nav",
+          "type": "Nav",
+          "children": [
+            {
+              "id": "btn-upload-nav",
+              "type": "FilePicker",
+              "variant": "ghost",
+              "text": "Загрузить",
+              "accept": "image/png, image/jpeg",
+              "maxSize": 10485760,
+              "requireAuth": true,
+              "action": "onFileSelected:go:/analysis"
+            },
+            {
+              "id": "btn-history",
+              "type": "Button",
+              "variant": "ghost",
+              "icon": "clock",
+              "text": "История",
+              "requireAuth": true,
+              "action": "go:/analysis"
+            }
+          ]
+        },
+        {
+          "id": "user-avatar",
+          "type": "Avatar",
+          "requireAuth": true,
+          "fallbackIcon": "user",
+          "menu": [
+            {
+              "id": "btn-profile",
+              "type": "Button",
+              "variant": "ghost",
+              "icon": "user",
+              "text": "Профиль",
+              "requireAuth": true,
+              "action": "go:/history"
+            },
+            {
+              "id": "btn-logout",
+              "type": "Button",
+              "variant": "danger",
+              "icon": "logout",
+              "text": "Выход",
+              "requireAuth": true,
+              "action": "logout:/login"
+            }
+          ]
+        }
       ]
     },
     {
@@ -19,9 +68,27 @@
       "type": "Section",
       "align": "center",
       "children": [
-        { "id": "h1", "type": "Heading", "level": 1, "text": "Получите разбор своего рисунка от ИИ" },
-        { "id": "subtitle", "type": "Paragraph", "text": "Загрузите фото — нейросеть укажет на ошибки и подскажет, как улучшить" },
-        { "id": "btn-upload", "type": "Button", "variant": "primary", "text": "Загрузить рисунок", "action": "openUpload" }
+        {
+          "id": "h1",
+          "type": "Heading",
+          "level": 1,
+          "text": "Получите разбор своего рисунка от ИИ"
+        },
+        {
+          "id": "subtitle",
+          "type": "Paragraph",
+          "text": "Загрузите фото — нейросеть укажет на ошибки и подскажет, как улучшить"
+        },
+        {
+          "id": "btn-upload-hero",
+          "type": "FilePicker",
+          "variant": "primary",
+          "text": "Загрузить рисунок",
+          "accept": "image/png, image/jpeg",
+          "maxSize": 10485760,
+          "requireAuth": true,
+          "action": "onFileSelected:go:/analysis"
+        }
       ]
     },
     {
