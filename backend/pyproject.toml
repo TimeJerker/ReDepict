@@ -5,7 +5,9 @@ description = "Backend API for ReDepict"
 readme = "README.md"
 requires-python = ">=3.11,<3.13"
 dependencies = [
+    "fastapi>=0.141.1",
     "pydantic>=2.13.5",
+    "sqlalchemy>=2.1.1",
 ]
 
 
