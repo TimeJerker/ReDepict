@@ -1,25 +1,98 @@
 {
   "screen": "Register",
   "type": "Modal",
-  "route": "/register (или модальное окно поверх /login)",
+  "route": "/register (overlay over /login)",
   "owner": "Frontend-1",
   "figmaFrame": "Screens / Register / Modal",
   "layout": "overlay + centered-card",
   "components": [
     {
+      "id": "overlay",
+      "type": "Overlay",
+      "fill": "#000000",
+      "opacity": 0.5,
+      "action": "closeOverlay"
+    },
+    {
       "id": "register-card",
       "type": "Card",
-      "width": 400,
-      "padding": 32,
+      "width": 480,
+      "padding": 40,
+      "gap": 16,
+      "position": "center",
+      "background": "#FFFFFF",
+      "cornerRadius": 16,
       "children": [
-        { "id": "title", "type": "Heading", "text": "Регистрация" },
-        { "id": "input-name", "type": "Input", "label": "Имя", "placeholder": "Как вас зовут" },
-        { "id": "input-email", "type": "Input", "label": "Email", "placeholder": "you@mail.com" },
-        { "id": "input-password", "type": "Input", "label": "Пароль", "inputType": "password" },
-        { "id": "input-confirm", "type": "Input", "label": "Повторите пароль", "inputType": "password" },
-        { "id": "btn-create", "type": "Button", "variant": "primary", "text": "Создать аккаунт" },
-        { "id": "btn-cancel", "type": "Button", "variant": "ghost", "text": "Отмена" }
+        {
+          "id": "btn-close",
+          "type": "IconButton",
+          "icon": "x",
+          "size": 24,
+          "position": "top-right",
+          "action": "closeOverlay"
+        },
+        {
+          "id": "title",
+          "type": "Heading",
+          "level": 2,
+          "text": "Регистрация",
+          "align": "center"
+        },
+        {
+          "id": "input-name",
+          "type": "Input",
+          "label": "Имя",
+          "required": true
+        },
+        {
+          "id": "input-email",
+          "type": "Input",
+          "label": "Email",
+          "placeholder": "you@mail.com",
+          "inputType": "email",
+          "required": true,
+          "validation": "email"
+        },
+        {
+          "id": "input-password",
+          "type": "Input",
+          "label": "Пароль",
+          "placeholder": "Минимум 6 символов",
+          "inputType": "password",
+          "required": true,
+          "validation": "min:6"
+        },
+        {
+          "id": "input-confirm",
+          "type": "Input",
+          "label": "Повторите пароль",
+          "inputType": "password",
+          "required": true,
+          "validation": "match:input-password"
+        },
+        {
+          "id": "actions",
+          "type": "Row",
+          "gap": 12,
+          "children": [
+            {
+              "id": "btn-create",
+              "type": "Button",
+              "variant": "primary",
+              "text": "Создать аккаунт",
+              "action": "submit:go:/analysis"
+            },
+            {
+              "id": "btn-cancel",
+              "type": "Button",
+              "variant": "ghost",
+              "text": "Отмена",
+              "action": "closeOverlay"
+            }
+          ]
+        }
       ]
     }
-  ]
+  ],
+  "notes": "Модалка поверх Auth / Login. Валидация: email, min 6 символов, пароли должны совпадать. При успехе — /analysis. Закрытие: overlay, btn-close, btn-cancel."
 }
