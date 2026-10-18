@@ -1,0 +1,37 @@
+:root {
+  /* Фоны */
+  --color-bg-primary: #FFFFFF;
+  --color-bg-secondary: #F5F5F5;
+  --color-bg-lite: #E6F5EA;
+  --color-bg-positive: #C6FAD2;
+
+  /* Текст */
+  --color-text-primary: #000000;
+  --color-text-secondary: #666666;
+  --color-green-text-primary: #2E8B46;
+  --color-green-text-secondary: #02542D;
+
+  /* Акценты и границы */
+  --color-accent-primary: #3BAA5C;
+  --color-border-default: #D9D9D9;
+}
+
+
+[data-theme="dark"] {
+  /* Фоны */
+  --color-bg-primary: #171717;
+  --color-bg-secondary: #1C1C1E;
+  --color-bg-lite: #1E3A2B;
+  --color-bg-positive: #1E3A2B;
+
+  /* Текст */
+  --color-text-primary: #FAFAFA;
+  --color-text-secondary: #A1A1AA;
+  --color-green-text-primary: #4ADE80;
+  --color-green-text-secondary: #22C55E;
+
+  /* Акценты и границы */
+  --color-accent-primary: #4ADE80;
+  --color-border-default: #3A3A3C;
+}
+
