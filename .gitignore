@@ -12,3 +12,5 @@ wheels/
 
 # Uploads directory
 .backend.src.redepict.uploads
+
+node_modules/
