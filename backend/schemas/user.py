@@ -1,0 +1,5 @@
+from pyndatic import BaseModel, EmailStr
+
+class UserResponse(BaseModel):
+    id: int
+    email: EmailStr
