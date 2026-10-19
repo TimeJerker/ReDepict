@@ -8,3 +8,7 @@ wheels/
 
 # Virtual environments
 .venv
+.env
+
+# Uploads directory
+.backend.src.redepict.uploads
