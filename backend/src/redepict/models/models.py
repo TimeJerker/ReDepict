@@ -1,11 +1,11 @@
 """ORM-модели ReDepict."""
 from sqlalchemy import (
     BigInteger, CheckConstraint, Column, DateTime, ForeignKey,
-    Index, Integer, SmallInteger, String, Text, func, LargeBinary
+    Index, Integer, SmallInteger, String, Text, func, LargeBinary, ForeignKeyConstraint
 )
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
-from backend.src.redepict.db.base import Base
+from src.redepict.db.base import Base
 
 class User(Base):
     __tablename__ = "users"
@@ -47,8 +47,16 @@ class Drawing(Base):
     analysis = relationship("Analysis", back_populates="drawing", uselist=False, cascade="all, delete-orphan")
     chat_messages = relationship("ChatMessage", back_populates="drawing", cascade="all, delete-orphan")
 
+    file = relationship("MinioObject", back_populates="drawing", uselist=False)
+
     __table_args__ = (
         CheckConstraint("status IN ('uploaded', 'analyzing', 'analyzed', 'failed')", name="ck_drawings_status"),
+        ForeignKeyConstraint(
+            ["bucket", "object_key"],
+            ["minio_object.bucket", "minio_object.object_key"],
+            name="fk_drawings_minio_object",
+            ondelete="CASCADE"
+        ),
     )
 
 
@@ -98,3 +106,5 @@ class MinioObject(Base):
     bucket = Column(String(50), primary_key=True)
     object_key = Column(String(255), primary_key=True)
     content = Column(LargeBinary, nullable=True)
+
+    drawing = relationship("Drawing", back_populates="file", uselist=False)
