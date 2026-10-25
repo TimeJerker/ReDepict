@@ -13,6 +13,12 @@ class Settings(BaseSettings):
     DB_PORT: int
     DB_NAME: str
 
+    MINIO_ENDPOINT: str
+    MINIO_ACCESS_KEY: str
+    MINIO_SECRET_KEY: str
+    MINIO_BUCKET_NAME: str
+    MINIO_SECURE: bool
+
     model_config = SettingsConfigDict(env_file=ENV_FILE)
 
     @computed_field
