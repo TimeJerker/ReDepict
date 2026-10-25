@@ -10,16 +10,18 @@ interface FilePickerProps {
   variant?: 'primary' | 'positive' | 'ghost';
   icon?: ReactNode;
   className?: string;
+  disabled?: boolean; // <-- Добавили пропс
 }
 
 export const FilePicker = ({
   onFileSelected,
-  accept = 'image/png, image/jpeg',
-  maxSize = 10 * 1024 * 1024,
+  accept = 'image/png, image/jpeg, image/webp',
+  maxSize = 5 * 1024 * 1024,
   children = 'Загрузить',
   variant = 'primary',
   icon,
   className = '',
+  disabled = false, // <-- Дефолтное значение
 }: FilePickerProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -28,7 +30,7 @@ export const FilePicker = ({
     if (!file) return;
 
     if (file.size > maxSize) {
-      alert('Файл слишком большой. Максимум 10 МБ.');
+      alert('Файл слишком большой. Максимум 5 МБ.');
       return;
     }
 
@@ -44,12 +46,14 @@ export const FilePicker = ({
         onChange={handleFileChange}
         accept={accept}
         className="hidden"
+        disabled={disabled}
       />
       <AppButton
         variant={variant}
         icon={icon}
         onClick={() => fileInputRef.current?.click()}
         className={className}
+        disabled={disabled} // <-- Прокидываем в кнопку
       >
         {children}
       </AppButton>

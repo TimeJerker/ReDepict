@@ -4,8 +4,10 @@ import { FilePicker } from '../components/ui/FilePicker';
 
 interface HomeScreenProps {
   onNavigate: (screen: Screen) => void;
-  theme?: 'light' | 'dark';          // <-- Добавили
-  toggleTheme?: () => void;          // <-- Добавили
+  // Просто передаем файл наверх в App.tsx
+  onFileSelected: (file: File) => void;
+  theme?: 'light' | 'dark';
+  toggleTheme?: () => void;
 }
 
 const steps = [
@@ -14,22 +16,13 @@ const steps = [
   { number: '3', title: 'Получите советы', text: 'Что улучшить и как именно' },
 ];
 
-export const HomeScreen = ({ onNavigate, theme, toggleTheme }: HomeScreenProps) => {
-  const handleFile = (_file: File) => {
-    onNavigate('analysis');
-  };
-
+export const HomeScreen = ({ onNavigate, onFileSelected, theme, toggleTheme }: HomeScreenProps) => {
   return (
     <div className="min-h-screen flex flex-col bg-[var(--color-bg-primary)]">
-      <Header 
-        active="home" 
-        onNavigate={onNavigate} 
-        theme={theme} 
-        toggleTheme={toggleTheme} 
-      />
+      <Header active="home" onNavigate={onNavigate} theme={theme} toggleTheme={toggleTheme} />
 
       <main className="flex-1 flex flex-col">
-        {/* Hero */}
+        {/* Hero Section */}
         <section className="flex flex-col items-center justify-center gap-6 px-20 py-20 min-h-[580px] text-center">
           <h1 className="text-[48px] leading-[1.15] font-bold text-[var(--color-text-primary)] max-w-[952px]">
             Получите разбор своего рисунка от ИИ
@@ -37,16 +30,19 @@ export const HomeScreen = ({ onNavigate, theme, toggleTheme }: HomeScreenProps) 
           <p className="text-xl text-[var(--color-text-secondary)] max-w-[743px]">
             Загрузите фото — нейросеть укажет на ошибки и подскажет, как улучшить
           </p>
-          <FilePicker
-            onFileSelected={handleFile}
-            variant="positive"
-            className="w-[280px] h-14 text-xl font-bold mt-2"
-          >
-            Загрузить рисунок
-          </FilePicker>
+          
+          <div className="mt-2">
+            <FilePicker
+              onFileSelected={onFileSelected}
+              variant="positive"
+              className="w-[280px] h-14 text-xl font-bold"
+            >
+              Загрузить рисунок
+            </FilePicker>
+          </div>
         </section>
 
-        {/* How it works */}
+        {/* How it works Section */}
         <section className="flex flex-col items-center gap-12 p-20">
           <h2 className="text-[32px] font-bold text-[var(--color-text-primary)]">
             Как это работает
