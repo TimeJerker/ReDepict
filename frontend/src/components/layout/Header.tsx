@@ -1,7 +1,7 @@
 // src/components/layout/Header.tsx
 import { Avatar } from '../ui/Avatar';
 import { Sun, Moon } from 'lucide-react'; // Импортируем иконки
-import logo from '../../assets/logo.png'; // (если вы уже добавили логотип)
+import logo from '../../assets/logo.png'; 
 
 export type Screen = 'home' | 'analysis';
 

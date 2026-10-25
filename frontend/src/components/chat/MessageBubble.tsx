@@ -5,7 +5,7 @@ export interface ChatMessage {
   id: string;
   role: 'user' | 'ai';
   text: string;
-  hasImage?: boolean;
+  imageUrl?: string; 
 }
 
 interface MessageBubbleProps {
@@ -18,11 +18,20 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
   if (isUser) {
     return (
       <div className="self-end flex flex-col gap-2.5 p-4 rounded-xl bg-[var(--color-bg-lite)] w-[272px] max-w-full">
-        {message.hasImage && (
+        {/* Если есть ссылка на картинку, рендерим её */}
+        {message.imageUrl ? (
+          <img
+            src={message.imageUrl}
+            alt="Загруженный рисунок"
+            className="w-full aspect-[4/3] object-cover rounded-lg border border-[var(--color-border-default)]"
+          />
+        ) : (
+          // Заглушка, если картинки нет (на всякий случай)
           <div className="w-full aspect-[4/3] rounded-lg bg-[var(--color-bg-secondary)] border border-[var(--color-border-default)] flex items-center justify-center">
             <ImageIcon size={32} className="text-[var(--color-text-secondary)]" />
           </div>
         )}
+        
         <p className="text-sm font-bold text-[var(--color-text-secondary)] whitespace-pre-line">
           {message.text}
         </p>
