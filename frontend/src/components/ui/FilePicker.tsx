@@ -1,23 +1,25 @@
 // src/components/ui/FilePicker.tsx
 import { useRef, ChangeEvent, ReactNode } from 'react';
-import { AppButton } from './AppButton';// переиспользуем кнопку
+import { AppButton } from './AppButton';
 
 interface FilePickerProps {
   onFileSelected: (file: File) => void;
   accept?: string;
-  maxSize?: number; // в байтах
+  maxSize?: number;
   children?: ReactNode;
-  variant?: 'primary' | 'ghost';
+  variant?: 'primary' | 'positive' | 'ghost';
   icon?: ReactNode;
+  className?: string;
 }
 
 export const FilePicker = ({
   onFileSelected,
   accept = 'image/png, image/jpeg',
-  maxSize = 10 * 1024 * 1024, // 10MB
+  maxSize = 10 * 1024 * 1024,
   children = 'Загрузить',
   variant = 'primary',
   icon,
+  className = '',
 }: FilePickerProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -25,15 +27,12 @@ export const FilePicker = ({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Проверка размера
     if (file.size > maxSize) {
-      alert('Файл слишком большой. Максимум 10 МБ.'); // В будущем заменить на Toast
+      alert('Файл слишком большой. Максимум 10 МБ.');
       return;
     }
 
     onFileSelected(file);
-    
-    // Очищаем инпут, чтобы можно было выбрать тот же файл снова
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -50,6 +49,7 @@ export const FilePicker = ({
         variant={variant}
         icon={icon}
         onClick={() => fileInputRef.current?.click()}
+        className={className}
       >
         {children}
       </AppButton>
