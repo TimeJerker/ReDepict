@@ -36,10 +36,12 @@ def login_user(db: Session, email: str, password: str) -> models.User:
 
 # ---------- Рисунки (Drawings) ----------
 def create_drawing(db: Session, user_id: int, object_key: str, original_name: str,
-                   mime_type: str, size_bytes: int, technique: str = None, level: str = None) -> models.Drawing:
+                   mime_type: str, size_bytes: int, technique: str = None, level: str = None,
+                   image_url: str = None) -> models.Drawing:
     drawing = models.Drawing(
         user_id=user_id, object_key=object_key, original_name=original_name,
-        mime_type=mime_type, size_bytes=size_bytes, technique=technique, level=level
+        mime_type=mime_type, size_bytes=size_bytes, technique=technique, level=level,
+        image_url=image_url
     )
     db.add(drawing)
     db.commit()
