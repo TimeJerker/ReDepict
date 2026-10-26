@@ -1,8 +1,8 @@
-export interface SubmissionResponse {
+export interface DrawingResponse {
   id: number;
-  filename: string;
-  file_path: string;
-  ai_feedback: string | null;
+  original_name: string;
+  image_url: string; // Бэкенд вернет /uploads/...
+  status: string;
   created_at: string;
 }
 

@@ -4,18 +4,27 @@ import { Sidebar } from '../components/layout/Sidebar';
 import { ChatArea } from '../components/chat/ChatArea';
 import { ChatInput } from '../components/chat/ChatInput';
 import type { ChatMessage } from '../components/chat/MessageBubble';
-import type { ActiveWork } from '../App'; // Импортируем тип из App.tsx
+import type { ActiveWork } from '../App';
+import type { DrawingResponse } from '../api/types';
 
 interface AnalysisScreenProps {
   activeWork: ActiveWork | null;
   onNavigate: (screen: Screen) => void;
   onFileSelected: (file: File) => void;
+  onSelectWork: (work: DrawingResponse) => void;
   theme?: 'light' | 'dark';
   toggleTheme?: () => void;
 }
 
-export const AnalysisScreen = ({ activeWork, onNavigate, onFileSelected, theme, toggleTheme }: AnalysisScreenProps) => {
-  // Защита на случай, если экран открылся без данных
+export const AnalysisScreen = ({ 
+  activeWork, 
+  onNavigate, 
+  onFileSelected, 
+  onSelectWork,
+  theme, 
+  toggleTheme 
+}: AnalysisScreenProps) => {
+  
   if (!activeWork) {
     return (
       <div className="h-screen flex flex-col items-center justify-center bg-[var(--color-bg-primary)]">
@@ -30,17 +39,17 @@ export const AnalysisScreen = ({ activeWork, onNavigate, onFileSelected, theme, 
     );
   }
 
-  // Формируем массив сообщений на основе данных от бэкенда (или временных данных)
+  // --- ВОТ ЗДЕСЬ МЫ СОБИРАЕМ МАССИВ СООБЩЕНИЙ ---
   const messages: ChatMessage[] = [
     {
       id: '1',
       role: 'user',
       text: 'Оцени композицию и подскажи, что улучшить в тенях',
-      imageUrl: activeWork.imageUrl, // Здесь будет либо blob:..., либо /uploads/...
+      imageUrl: activeWork.imageUrl, // Передаем картинку (локальную или серверную)
     },
   ];
 
-  // Если бэкенд уже ответил (isUploading === false) и есть текст ответа, добавляем пузырь ИИ
+  // Если загрузка завершена и есть ответ, добавляем сообщение от ИИ
   if (!activeWork.isUploading && activeWork.aiFeedback) {
     messages.push({
       id: '2',
@@ -48,30 +57,25 @@ export const AnalysisScreen = ({ activeWork, onNavigate, onFileSelected, theme, 
       text: activeWork.aiFeedback,
     });
   }
-
-  // Временная заглушка для отправки сообщений (пока на бэке нет ручки для чата)
-  const handleSendMessage = (text: string) => {
-    alert(`Бэкенд для чата еще не готов!\nВы пытались отправить: "${text}"`);
-  };
+  // ------------------------------------------------
 
   return (
     <div className="h-screen flex flex-col bg-[var(--color-bg-primary)]">
       <Header active="analysis" onNavigate={onNavigate} theme={theme} toggleTheme={toggleTheme} />
-
+      
       <div className="flex flex-1 min-h-0">
-        {/* Сайдбар (пока с моковыми данными истории) */}
-        <Sidebar onUpload={onFileSelected} />
-
+        {/* Передаем функцию и ID в сайдбар */}
+        <Sidebar 
+          onUpload={onFileSelected} 
+          onSelectWork={onSelectWork} 
+          activeWorkId={activeWork.id} 
+        />
+        
         <main className="flex-1 flex flex-col min-h-0 min-w-0">
-          {/* Область чата. Передаем isLoading, чтобы показать "ИИ печатает..." */}
-          <ChatArea 
-            messages={messages} 
-            isLoading={activeWork.isUploading} 
-          />
+          <ChatArea messages={messages} isLoading={activeWork.isUploading} />
           
-          {/* Поле ввода временно заблокировано (disabled) */}
           <ChatInput 
-            onSend={handleSendMessage} 
+            onSend={(text) => alert(text)} 
             onFileSelected={onFileSelected}
             disabled={activeWork.isUploading} 
           />
