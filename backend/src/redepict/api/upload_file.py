@@ -35,6 +35,7 @@ async def upload_drawing(file: UploadFile = File(...),
 
     # Вместо current_user.id ставим временную заглушку (1)
     db_responce = SubmissionResponse(
+        id =1,
         user_id=1,  # <-- ЗАГЛУШКА, раз нет current_user
         filename=file.filename,
         file_path=file_path,
