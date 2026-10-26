@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from src.redepict.api import upload_file, auth
+from src.redepict.api import upload_file#, auth
 from src.redepict.db.base import Base, engine
 
 
@@ -17,7 +17,7 @@ Base.metadata.create_all(bind=engine)
 
 #Подключить роутеры
 app.include_router(upload_file.router)
-app.include_router(auth.router)
+#app.include_router(auth.router)
 
 
 @app.get("/")
