@@ -89,9 +89,6 @@ class Drawing(Base):
     # Сообщения чата, привязанные к этому рисунку
     chat_messages = relationship("ChatMessage", back_populates="drawing", cascade="all, delete-orphan")
 
-    # Содержимое файла из таблицы minio_object \
-    file = relationship("MinioObject", back_populates="drawing", uselist=False)
-
     __table_args__ = (
         CheckConstraint("status IN ('uploaded', 'analyzing', 'analyzed', 'failed')", name="ck_drawings_status"),
     )
