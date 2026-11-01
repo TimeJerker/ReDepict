@@ -68,9 +68,6 @@ def delete_drawing(db: Session, drawing_id: int) -> bool:
     if not drawing:
         return False
     db.delete(drawing)
-    file_obj = db.get(models.MinioObject, (drawing.bucket, drawing.object_key))
-    if file_obj:
-        db.delete(file_obj)
     db.commit()
     return True
 
@@ -107,24 +104,3 @@ def get_drawing_chat(db: Session, drawing_id: int) -> Sequence[models.ChatMessag
     stmt = select(models.ChatMessage).where(
         drawing_id == models.ChatMessage.drawing_id).order_by(models.ChatMessage.created_at.asc())
     return db.scalars(stmt).all()
-
-# ---------- ФАЙЛЫ (MinioObject) ----------
-def save_file_to_db(db: Session, bucket: str, object_key: str, content: bytes) -> models.MinioObject:
-    file_obj = db.get(models.MinioObject, (bucket, object_key))
-    if file_obj:
-        file_obj.content = content
-    else:
-        file_obj = models.MinioObject(bucket=bucket, object_key=object_key, content=content)
-        db.add(file_obj)
-    db.commit(); db.refresh(file_obj)
-    return file_obj
-
-def get_file_from_db(db: Session, bucket: str, object_key: str) -> models.MinioObject | None:
-    return db.get(models.MinioObject, (bucket, object_key))
-
-def delete_file_from_db(db: Session, bucket: str, object_key: str) -> bool:
-    file_obj = db.get(models.MinioObject, (bucket, object_key))
-    if not file_obj:
-        return False
-    db.delete(file_obj); db.commit()
-    return True
