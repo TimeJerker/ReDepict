@@ -18,13 +18,13 @@ class Settings(BaseSettings):
     @computed_field
     @property
     def DATABASE_URL(self) -> str:
-        return str(URL.create(
+        return (URL.create(
             drivername="postgresql+psycopg",
             username=self.DB_USER,
             password=self.DATABASE_PASS,
             host=self.DB_HOST,
             port=self.DB_PORT,
             database=self.DB_NAME,
-        ))
+        )).render_as_string(hide_password=False)
 
 settings = Settings()
