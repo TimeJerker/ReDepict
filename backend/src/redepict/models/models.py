@@ -48,12 +48,10 @@ class Drawing(Base):
     # Автор рисунка (ссылка на users.id)
     user_id = Column(BigInteger, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
     # Имя бакета объектного хранилища MinIO (S3-совместимого), где лежит файл.
-    # Пара (bucket, object_key) = полный адрес файла. Почти всегда это
-    # 'redepict-drawings' (настройка MINIO_BUCKET_NAME в config.py),
-    # но поле хранится построчно, чтобы не привязывать схему к одному бакету
+    # Пара (bucket, object_key) = полный адрес файла.
     bucket = Column(String(50), nullable=False, default="redepict-drawings")
     # Путь к файлу внутри хранилища. Вместе с bucket образует составной внешний
-    # ключ на таблицу minio_object, где лежит содержимое файла (см. __table_args__)
+    # ключ на таблицу minio_object, где лежит содержимое файла
     object_key = Column(String(255), nullable=False, unique=True)
     # Прямая ссылка (URL) на картинку — по ней фронтенд показывает изображение
     # в <img src="...">, не выкачивая байты файла через API
@@ -91,17 +89,8 @@ class Drawing(Base):
     # Сообщения чата, привязанные к этому рисунку
     chat_messages = relationship("ChatMessage", back_populates="drawing", cascade="all, delete-orphan")
 
-    # Содержимое файла из таблицы minio_object \
-    file = relationship("MinioObject", back_populates="drawing", uselist=False)
-
     __table_args__ = (
         CheckConstraint("status IN ('uploaded', 'analyzing', 'analyzed', 'failed')", name="ck_drawings_status"),
-        ForeignKeyConstraint(
-            ["bucket", "object_key"],
-            ["minio_object.bucket", "minio_object.object_key"],
-            name="fk_drawings_minio_object",
-            ondelete="CASCADE"
-        ),
     )
 
 
@@ -155,27 +144,3 @@ class ChatMessage(Base):
     __table_args__ = (
         CheckConstraint("role IN ('user', 'assistant')", name="ck_chat_role"),
     )
-
-
-class MinioObject(Base):
-    """
-    Хранилище содержимого файлов.
-
-    Название и структура повторяют адресацию MinIO (S3): файл однозначно
-    определяется парой (bucket, object_key). Сейчас бинарное содержимое лежит
-    прямо в БД (поле content, LargeBinary) — таблица работает как «локальная
-    замена» объектного хранилища.
-    """
-    __tablename__ = "minio_object"
-
-    # Имя бакета (аналог «папки» верхнего уровня в S3/MinIO)
-    bucket = Column(String(50), primary_key=True)
-    # Путь к файлу внутри бакета, уникален в рамках бакета;
-    # вторая часть составного первичного ключа
-    object_key = Column(String(255), primary_key=True)
-    # Содержимое файла в байтах. NULL, если файл реально лежит в MinIO,
-    # а в БД хранится только его адрес
-    content = Column(LargeBinary, nullable=True)
-
-    # Рисунок, ссылающийся на этот файл
-    drawing = relationship("Drawing", back_populates="file", uselist=False)

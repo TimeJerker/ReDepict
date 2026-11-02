@@ -13,24 +13,18 @@ class Settings(BaseSettings):
     DB_PORT: int
     DB_NAME: str
 
-    MINIO_ENDPOINT: str
-    MINIO_ACCESS_KEY: str
-    MINIO_SECRET_KEY: str
-    MINIO_BUCKET_NAME: str
-    MINIO_SECURE: bool
-
     model_config = SettingsConfigDict(env_file=ENV_FILE)
 
     @computed_field
     @property
     def DATABASE_URL(self) -> str:
-        return str(URL.create(
+        return (URL.create(
             drivername="postgresql+psycopg",
             username=self.DB_USER,
             password=self.DATABASE_PASS,
             host=self.DB_HOST,
             port=self.DB_PORT,
             database=self.DB_NAME,
-        ))
+        )).render_as_string(hide_password=False)
 
 settings = Settings()
