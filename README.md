@@ -49,10 +49,77 @@
 - **Хранилище файлов:** MinIO
 - **Ключевая технология анализа рисунков:** мультимодальная Vision-LLM через API — OpenAI GPT-4o
 
+
+
 ## 📦 Установка и запуск
 
-### 1. Клонировать репозиторий
+### 1️⃣ Клонировать репозиторий
 
 ```bash
 git clone https://github.com/TimeJerker/ReDepict.git
 cd ReDepict
+```
+
+### 2️⃣ Настроить базу данных PostgreSQL
+
+Для работы бэкенда необходима база данных PostgreSQL.
+
+1. Установите PostgreSQL, если он ещё не установлен.
+2. 
+
+```sql
+CREATE DATABASE redepict;
+```
+
+### 3️⃣ Создать файл `.env`
+
+В корне проекта (рядом с папками `backend` и `frontend`) создайте файл `.env` и заполните его вашими данными:
+
+```env
+# Настройки базы данных
+DB_USER=postgres
+DATABASE_PASS=ваш_пароль_от_postgres
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=redepict
+```
+
+### 4️⃣ Запустить Backend
+
+Откройте терминал, перейдите в папку `backend` и установите зависимости с помощью `uv`:
+
+```bash
+cd backend
+uv pip install -r pyproject.toml
+```
+
+Запустите сервер:
+
+```bash
+uv run uvicorn src.redepict.main:app --reload
+```
+
+|Swagger| http://127.0.0.1:8000/docs |
+
+### 5️⃣ Запустить Frontend
+
+Не закрывая терминал с бэкендом, откройте **новый терминал** и перейдите в папку `frontend`:
+
+```bash
+cd frontend
+```
+
+Установите зависимости:
+
+```bash
+npm install
+```
+
+Запустите фронтенд:
+
+```bash
+npm run dev
+```
+
+
+Фронтенд будет доступен по адресу: http://localhost:5173

@@ -1,10 +1,11 @@
 [project]
 name = "redepict"
 version = "0.1.0"
-description = "Add your description here"
+description = "ReDepict — веб-приложение, которое помогает начинающим художникам получать профессиональную обратную связь по своим работам."
 readme = "README.md"
 authors = [
-    { name = "TimeJerker", email = "krov1chh@gmail.com" }
+    { name = "TimeJerker", email = "krov1chh@gmail.com" },
+    { name = "KsysaY", email = "jashina.xen@gmail.com" }
 ]
 requires-python = ">=3.11"
 dependencies = []
