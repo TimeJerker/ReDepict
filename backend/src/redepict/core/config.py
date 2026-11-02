@@ -3,7 +3,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import computed_field
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent
+BASE_DIR = Path(file).resolve().parent.parent.parent.parent.parent
 ENV_FILE = BASE_DIR / ".env"
 
 class Settings(BaseSettings):
@@ -14,6 +14,9 @@ class Settings(BaseSettings):
     DB_NAME: str
 
     model_config = SettingsConfigDict(env_file=ENV_FILE)
+
+    secret_key: str
+    algorithm: str = "HS256"
 
     @computed_field
     @property
