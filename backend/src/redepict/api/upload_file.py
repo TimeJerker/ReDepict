@@ -7,6 +7,9 @@ from src.redepict.api.schemas import DrawingResponse
 from .file_path import save_upload_file
 from src.redepict.api.dependencies import get_current_user
 from src.redepict.models.models import User
+from src.redepict.storage import minio_client
+from src.redepict.core.config import settings #!!!
+
 import src.redepict.db.crud as crud
 
 router = APIRouter(prefix="/upload-drawing", tags=["Upload-drawing"])
@@ -36,19 +39,31 @@ async def upload_drawing(
             detail="Файл слишком большой. Максимальный размер: 5 МБ."
         )
 
-    file_path = await save_upload_file(file)
+    # Придумываем уникальный ключ и кладём файл в MinIO.
+    object_key = minio_client.build_object_key(
+        user_id=current_user.id,
+        original_name=file.filename or "drawing.png",
+    )
+    minio_client.upload_bytes(object_key, content, file.content_type)
+
+    # file_path = await save_upload_file(file)
 
     drawing = crud.create_drawing(
         db=db,
         user_id=current_user.id,
-        object_key=file_path,
+        bucket=settings.minio_bucket,
+        object_key=object_key,
         original_name=file.filename or "unnamed",
         mime_type=file.content_type,
-        size_bytes=file.size or 0,  # size бывает None — страховка
+        size_bytes=len(content),
         technique=technique,
         level=level,
-        image_url=f"/{file_path}",
     )
 
-    # 3. вернуть схему из ORM-объекта
-    return drawing
+    # В ответ добавляем свежую временную ссылку на картинку.
+    resp = DrawingResponse.model_validate(drawing,
+                                          from_attributes=True)
+    resp.image_url = minio_client.get_presigned_url(
+        drawing.minio_bucket, drawing.minio_object_key)
+    return resp
+    # return drawing
