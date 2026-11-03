@@ -37,8 +37,8 @@ class SubmissionResponse(BaseModel):
 class DrawingResponse(BaseModel):
     id: int
     user_id: int
-    bucket: str
-    object_key: str
+    minio_bucket: str
+    minio_object_key: str
     image_url: Optional[str]
     original_name: str
     mime_type: str

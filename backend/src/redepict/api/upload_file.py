@@ -33,6 +33,13 @@ async def upload_drawing(
             detail="Допустимы только jpeg / png / webp",
         )
 
+    content = await file.read()
+    if not content:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Файл пустой",
+        )
+
     if file.size > MAX_FILE_SIZE:
         raise HTTPException(
             status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
@@ -51,7 +58,7 @@ async def upload_drawing(
     drawing = crud.create_drawing(
         db=db,
         user_id=current_user.id,
-        bucket=settings.minio_bucket,
+        bucket=settings.MINIO_BUCKET,
         object_key=object_key,
         original_name=file.filename or "unnamed",
         mime_type=file.content_type,

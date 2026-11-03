@@ -33,8 +33,8 @@ def my_drawings(db: Session = Depends(get_db),
 
 
 @router.get("/{drawing_id}/file")
-def download_drawing(db: Session = Depends(get_db),
-                     drawing_id: int,
+def download_drawing(drawing_id: int,
+                     db: Session = Depends(get_db),
                      current_user: User = Depends(get_current_user), ):
     """Скачивание файла: бакет и ключ берём из базы, чужие
      рисунки не отдаём (не найдутся через get_user_drawing)."""
