@@ -1,12 +1,15 @@
 import datetime
+from zipfile import Path
 
+from backend.src.redepict.db.crud import create_analysis
+from backend.src.redepict.services.gemini_service import analyze_user_drawing
 from fastapi import APIRouter, UploadFile, File, HTTPException, status, Depends
 from sqlalchemy.orm import Session
 from src.redepict.db.base import get_db
-from src.redepict.api.schemas import SubmissionResponse
+from src.redepict.api.schemas import AnalysisResponse, SubmissionResponse
 from .file_path import save_upload_file
 from src.redepict.api.dependencies import get_current_user
-from src.redepict.models.models import User
+from src.redepict.models.models import Drawing, User
 
 router = APIRouter(prefix="/upload-drawing", tags=["Upload-drawing"])
 
@@ -40,7 +43,37 @@ async def upload_drawing(file: UploadFile = File(...),
         created_at=datetime.utcnow()
     )
 
-
-    #feedback = await generate_feedback(file_path)
-
     return db_responce
+
+@router.post("/drawings/{drawing_id}/analyze", response_model=AnalysisResponse)
+async def analyze_existing_drawing(
+    drawing_id: int, db: Session = Depends(get_db)
+):
+
+    drawing = db.query(Drawing).filter(Drawing.id == drawing_id).first()
+    if not drawing:
+        raise HTTPException(status_code=404, detail="Рисунок не найден")
+
+    if drawing.analysis:
+        return drawing.analysis
+
+    image_path = Path(drawing.image_url)
+    if not image_path.exists():
+        raise HTTPException(
+            status_code=404, detail="Файл рисунка не найден на сервере"
+        )
+
+    try:
+        ai_result, model_name = await analyze_user_drawing(image_path)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+    analysis_record = create_analysis(
+        db=db,
+        drawing_id=drawing.id,
+        model_name=model_name,
+        score=ai_result.score,
+        summary=ai_result.summary,
+    )
+
+    return analysis_record
