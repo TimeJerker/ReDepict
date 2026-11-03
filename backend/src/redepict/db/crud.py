@@ -67,7 +67,7 @@ def get_user_drawing(db: Session, user_id: int, drawing_id) -> Sequence[models.D
         drawing_id == models.Drawing.id,
         user_id == models.Drawing.user_id,
     )
-    return db.scalars(stmt).all()
+    return db.scalar(stmt)
 
 
 def update_drawing_status(db: Session, drawing_id: int, status: str, result_object_key: str = None) -> models.Drawing | None:

@@ -53,6 +53,12 @@ class Drawing(Base):
     # Путь к файлу внутри хранилища. Вместе с bucket образует составной внешний
     # ключ на таблицу minio_object, где лежит содержимое файла
     minio_object_key = Column(String(255), nullable=False, unique=True)
+    # Прямая ссылка (URL) на картинку — по ней фронтенд показывает изображение
+    # в <img src="...">, не выкачивая байты файла через API
+    # Может быть относительным путём (/uploads/<имя>.png, раздаётся StaticFiles
+    # из main.py) или полным публичным URL MinIO (http://<endpoint>/<bucket>/<key>).
+    # NULL, пока ссылка не сформирована
+    image_url = Column(String(512), nullable=True)
     # Оригинальное имя файла при загрузке пользователем — показываем в UI
     # и отдаём при скачивании, чтобы имя было понятным человеку
     original_name = Column(String(255), nullable=False)

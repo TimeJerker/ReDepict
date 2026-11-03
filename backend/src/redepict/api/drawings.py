@@ -1,4 +1,5 @@
 from io import BytesIO
+from urllib.parse import quote
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import StreamingResponse
@@ -33,11 +34,11 @@ def my_drawings(db: Session = Depends(get_db),
 
 
 @router.get("/{drawing_id}/file")
-def download_drawing(drawing_id: int,
-                     db: Session = Depends(get_db),
-                     current_user: User = Depends(get_current_user), ):
-    """Скачивание файла: бакет и ключ берём из базы, чужие
-     рисунки не отдаём (не найдутся через get_user_drawing)."""
+def download_drawing(
+    drawing_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     drawing = crud.get_user_drawing(db, current_user.id, drawing_id)
     if drawing is None:
         raise HTTPException(
@@ -46,9 +47,13 @@ def download_drawing(drawing_id: int,
         )
     data = minio_client.download_bytes(
         drawing.minio_bucket, drawing.minio_object_key)
+
+    filename = drawing.original_name or "file"
     return StreamingResponse(
         BytesIO(data),
         media_type=drawing.mime_type,
-        headers={"Распоряжение содержимым":
-                     f' файл="{drawing.original_name}"'},)
-
+        headers={
+            "Content-Disposition":
+                f"inline; filename''{quote(filename)}"
+        },
+    )
