@@ -1,8 +1,8 @@
-import datetime
-from zipfile import Path
+from datetime import datetime, timezone
+from pathlib import Path
 
-from backend.src.redepict.db.crud import create_analysis
-from backend.src.redepict.services.gemini_service import analyze_user_drawing
+from src.redepict.db.crud import create_analysis, create_drawing
+from src.redepict.services.gemini_service import analyze_user_drawing
 from fastapi import APIRouter, UploadFile, File, HTTPException, status, Depends
 from sqlalchemy.orm import Session
 from src.redepict.db.base import get_db
@@ -36,11 +36,21 @@ async def upload_drawing(file: UploadFile = File(...),
     
     file_path = save_upload_file(file)
 
-    db_responce = SubmissionResponse(
+    new_drawing = create_drawing(
+        db=db,
         user_id=current_user.id,
-        filename=file.filename,
-        file_path=file_path,
-        created_at=datetime.utcnow()
+        object_key=file_path,   
+        original_name=file.filename,
+        mime_type=file.content_type,
+        size_bytes=file.size,
+    )  
+
+    db_responce = SubmissionResponse(
+        id=new_drawing.id,
+        user_id=new_drawing.user_id,
+        filename=new_drawing.original_name,
+        file_path=new_drawing.object_key,
+        created_at=datetime.now(timezone.utc)
     )
 
     return db_responce

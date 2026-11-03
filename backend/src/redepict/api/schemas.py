@@ -27,6 +27,7 @@ class TokenResponse(BaseModel):
 
 class SubmissionResponse(BaseModel):
     id: int
+    user_id: int
     filename: str
     file_path: str
     created_at: datetime
@@ -41,14 +42,11 @@ class GeminiAnalysisResult(BaseModel):
         le=10,
         description="Итоговая оценка рисунка по шкале от 1 до 10",
     )
-    summary: str = Field(
-        ...,
-        description="Краткий технический вывод анализа (1-2 предложения) для сохранения в историю",
-    )
+
     detailed_analysis: str = Field(
         ...,
         description=(
-            "Красивый, развернутый и дружелюбный разбор рисунка для пользователя. "
+            "Полный, красивый, развернутый и дружелюбный разбор рисунка для пользователя. "
             "Используй Markdown-разметку: выдели разделы (Сюжет, Цвета и атмосфера, "
             "Что получилось круто, Совет для роста)."
         ),
@@ -60,7 +58,6 @@ class AnalysisResponse(BaseModel):
     model: str
     score: int
     summary: str
-    detailed_analysis: str
     created_at: datetime
 
     class Config:
