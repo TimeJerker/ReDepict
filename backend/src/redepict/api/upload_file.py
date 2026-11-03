@@ -30,6 +30,12 @@ async def upload_drawing(
             detail="Допустимы только jpeg / png / webp",
         )
 
+    if file.size > MAX_FILE_SIZE:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail="Файл слишком большой. Максимальный размер: 5 МБ."
+        )
+
     file_path = await save_upload_file(file)
 
     drawing = crud.create_drawing(
