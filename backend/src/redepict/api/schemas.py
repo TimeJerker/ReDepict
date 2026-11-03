@@ -33,3 +33,20 @@ class SubmissionResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class DrawingResponse(BaseModel):
+    id: int
+    user_id: int
+    bucket: str
+    object_key: str
+    image_url: Optional[str]
+    original_name: str
+    mime_type: str
+    size_bytes: int
+    technique: Optional[str]
+    level: Optional[str]
+    status: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True

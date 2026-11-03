@@ -7,13 +7,13 @@ import src.redepict.db.crud as crud
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
+
 @router.post("/register", response_model=schemas.UserResponse)
 def register_user(user_data: schemas.UserCreate, db: Session = Depends(get_db)):
-
     existing_user = crud.get_user_by_email(db, email=user_data.email)
     if existing_user:
         raise HTTPException(status_code=400, detail="Этот email уже зарегистрирован")
-    
+
     new_user = crud.create_user(
         db=db,
         username=user_data.username,
@@ -35,7 +35,7 @@ def login_user(user_data: schemas.UserLogin, db: Session = Depends(get_db)):
         )
 
     token_response = schemas.TokenResponse(
-        access_token=create_access_token({"sub": user.id}),
+        access_token=create_access_token({"sub": str(user.id)}),
         token_type="bearer"
     )
 

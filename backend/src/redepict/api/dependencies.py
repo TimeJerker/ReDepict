@@ -3,7 +3,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 import jwt
 from src.redepict.db.base import get_db
-from src.redepict.core.security import SECRET_KEY, ALGORITHM
+from src.redepict.core.security import JWT_SECRET_KEY, ALGORITHM
 from src.redepict.models.models import User
 
 security = HTTPBearer()
@@ -19,7 +19,7 @@ def get_current_user(
     )
     
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[ALGORITHM])
         user_id_str: str = payload.get("sub")
         if user_id_str is None:
             raise credentials_exception
