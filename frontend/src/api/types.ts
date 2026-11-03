@@ -1,8 +1,16 @@
-export interface SubmissionResponse {
+// src/api/types.ts
+export interface DrawingResponse {
   id: number;
-  filename: string;
-  file_path: string;
-  ai_feedback: string | null;
+  user_id: number;
+  bucket: string;
+  object_key: string;
+  image_url: string | null;
+  original_name: string;
+  mime_type: string;
+  size_bytes: number;
+  technique: string | null;
+  level: string | null;
+  status: string;
   created_at: string;
 }
 

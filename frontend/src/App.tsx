@@ -2,18 +2,17 @@
 import { useState, useEffect, useRef } from 'react';
 import { HomeScreen } from './screens/HomeScreen';
 import { AnalysisScreen } from './screens/AnalysisScreen';
+import { LoginScreen } from './screens/LoginScreen'; // <-- Импорт экрана логина
 import { worksApi } from './api/works';
 import { Toast } from './components/ui/Toast';
 import type { Screen } from './components/layout/Header';
 
-// Тип для текущей работы
-// Мы используем его, чтобы хранить как временные (локальные), так и реальные данные с бэка
 export interface ActiveWork {
-  id: number | string; // string, пока бэк не ответил (например, 'temp')
+  id: number | string;
   imageUrl: string;    
   aiFeedback: string | null;
-  isUploading: boolean; // Флаг, чтобы показать в чате "ИИ печатает..."
-  serverFilePath?: string;  // Сохраняем путь с сервера отдельно (на будущее)
+  isUploading: boolean; 
+  serverFilePath?: string | null; 
 }
 
 export default function App() {
@@ -22,15 +21,19 @@ export default function App() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [error, setError] = useState<string | null>(null);
 
-  // Используем useRef, чтобы помнить текущую временную ссылку и удалять её при смене фото
+  // Проверяем, есть ли токен при загрузке страницы
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
+    !!localStorage.getItem('access_token')
+  );
+
   const currentBlobUrl = useRef<string | null>(null);
   
-  // Применяем тему к HTML тегу
+  // Применяем тему
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
-  // Очистка памяти при размонтировании App (например, при закрытии вкладки)
+  // Очистка памяти при размонтировании
   useEffect(() => {
     return () => {
       if (currentBlobUrl.current) {
@@ -43,21 +46,17 @@ export default function App() {
     setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
 
-  // Функция, которая вызывается, когда пользователь выбрал файл в HomeScreen
+  // Загрузка файла
   const handleFileSelected = async (file: File) => {
     setError(null);
 
-    // 1. Удаляем старую локальную ссылку из памяти, если она была
     if (currentBlobUrl.current) {
       URL.revokeObjectURL(currentBlobUrl.current);
     }
 
-    // 2. Создаем новую временную локальную ссылку
     const localUrl = URL.createObjectURL(file);
     currentBlobUrl.current = localUrl;
 
-
-    // 3. Мгновенно переключаем экран и показываем локальную картинку
     setActiveWork({
       id: 'temp',
       imageUrl: localUrl,
@@ -66,52 +65,39 @@ export default function App() {
     });
     setScreen('analysis');
 
-    //ИМИТАЦИЯ ОТВЕТА БЭКЕНДА (задержка 3 секунды)
-    setTimeout(() => {
-      setActiveWork({
-        id: 1, // Фейковый ID
-        imageUrl: localUrl,
-        serverFilePath: 'mock/path.jpg',
-        aiFeedback: "Это тестовый ответ от ИИ (мок).\n• Композиция: объект слишком близко к левому краю — попробуйте сместить ближе к центру.\n• Тени: слишком мягкие. Добавьте более тёмный тон под объектом — это усилит контраст.",
-        isUploading: false, // Выключает лоадер, показывает ответ
-      });
-    }, 3000); 
-
-    /*
-    //  РЕАЛЬНЫЙ ЗАПРОС (раскомментировать, когда бэкенд будет готов)
-    // 4. В фоне отправляем файл на бэкенд
     try {
       const data = await worksApi.upload(file);
       
-      // 5. Бэк ответил успешно. 
-      // ВАЖНО: imageUrl оставляем прежним (localUrl), чтобы картинка не мигала!
       setActiveWork({
         id: data.id,
-        imageUrl: localUrl,        // <--- ОСТАВЛЯЕМ ЛОКАЛЬНУЮ ССЫЛКУ
-        serverFilePath: data.file_path, // Сохраняем путь с сервера, если понадобится
-        aiFeedback: data.ai_feedback,
+        imageUrl: localUrl,        
+        serverFilePath: data.image_url, 
+        aiFeedback: data.status === 'analyzed' ? "Анализ готов" : "ИИ анализирует...",
         isUploading: false,
       });
-
-  
       
     } catch (err: any) {
-      // Если произошла ошибка (например, бэк упал или файл не прошел валидацию)
       console.error('Ошибка загрузки:', err);
-      
-      // Показываем ошибку
-      setError(err.message || 'Не удалось загрузить файл. Попробуйте еще раз.');
-      
-      // Возвращаем пользователя на главный экран
+      setError(err.message || 'Не удалось загрузить файл.');
       setScreen('home');
       setActiveWork(null);
-      
-      // Очищаем память
       URL.revokeObjectURL(localUrl);
       currentBlobUrl.current = null;
-    }*/
+    }
   };
+  
+  // Если пользователь не авторизован — показываем экран логина
+  if (!isAuthenticated) {
+    return (
+      <LoginScreen 
+        onLoginSuccess={() => setIsAuthenticated(true)} 
+        theme={theme} 
+        toggleTheme={toggleTheme} 
+      />
+    );
+  }
 
+  // Если авторизован — показываем приложение
   return (
     <>
       {screen === 'home' ? (
@@ -131,7 +117,6 @@ export default function App() {
         />
       )}
 
-      {/* Глобальный Toast для ошибок на уровне App */}
       {error && (
         <Toast 
           message={error} 

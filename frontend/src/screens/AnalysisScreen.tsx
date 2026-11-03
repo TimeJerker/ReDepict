@@ -12,9 +12,11 @@ interface AnalysisScreenProps {
   onFileSelected: (file: File) => void;
   theme?: 'light' | 'dark';
   toggleTheme?: () => void;
+  onLogout?: () => void;
 }
 
 export const AnalysisScreen = ({ activeWork, onNavigate, onFileSelected, theme, toggleTheme }: AnalysisScreenProps) => {
+  
   // Защита на случай, если экран открылся без данных
   if (!activeWork) {
     return (
