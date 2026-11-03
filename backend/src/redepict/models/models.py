@@ -49,10 +49,10 @@ class Drawing(Base):
     user_id = Column(BigInteger, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
     # Имя бакета объектного хранилища MinIO (S3-совместимого), где лежит файл.
     # Пара (bucket, object_key) = полный адрес файла.
-    bucket = Column(String(50), nullable=False, default="redepict-drawings")
+    minio_bucket = Column(String(50), nullable=False, default="redepict-drawings")
     # Путь к файлу внутри хранилища. Вместе с bucket образует составной внешний
     # ключ на таблицу minio_object, где лежит содержимое файла
-    object_key = Column(String(255), nullable=False, unique=True)
+    minio_object_key = Column(String(255), nullable=False, unique=True)
     # Прямая ссылка (URL) на картинку — по ней фронтенд показывает изображение
     # в <img src="...">, не выкачивая байты файла через API
     # Может быть относительным путём (/uploads/<имя>.png, раздаётся StaticFiles

@@ -35,13 +35,22 @@ def login_user(db: Session, email: str, password: str) -> models.User:
     return user
 
 # ---------- Рисунки (Drawings) ----------
-def create_drawing(db: Session, user_id: int, object_key: str, original_name: str,
-                   mime_type: str, size_bytes: int, technique: str = None, level: str = None,
-                   image_url: str = None) -> models.Drawing:
+def create_drawing(db: Session, user_id: int, bucket: str,
+            object_key: str, original_name: str,
+            mime_type: str, size_bytes: int,
+            technique: str = None,
+            level: str = None) -> models.Drawing:
     drawing = models.Drawing(
-        user_id=user_id, object_key=object_key, original_name=original_name,
-        mime_type=mime_type, size_bytes=size_bytes, technique=technique, level=level,
-        image_url=image_url
+        user_id=user_id,
+        minio_bucket=bucket,
+        minio_object_key=object_key,
+        original_name=original_name,
+        mime_type=mime_type,
+        size_bytes=size_bytes,
+        technique=technique,
+        level=level,
+        image_url=None,
+        status="uploaded",
     )
     db.add(drawing)
     db.commit()
@@ -52,6 +61,14 @@ def get_user_drawings(db: Session, user_id: int, limit: int = 20) -> Sequence[mo
     stmt = select(models.Drawing).where(
         user_id == models.Drawing.user_id).order_by(models.Drawing.created_at.desc()).limit(limit)
     return db.scalars(stmt).all()
+
+def get_user_drawing(db: Session, user_id: int, drawing_id) -> Sequence[models.Drawing] | None:
+    stmt = select(models.Drawing).where(
+        drawing_id == models.Drawing.id,
+        user_id == models.Drawing.user_id,
+    )
+    return db.scalars(stmt).all()
+
 
 def update_drawing_status(db: Session, drawing_id: int, status: str, result_object_key: str = None) -> models.Drawing | None:
     drawing = db.get(models.Drawing, drawing_id)
