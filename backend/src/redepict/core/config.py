@@ -17,6 +17,9 @@ class Settings(BaseSettings):
 
     model_config = SettingsConfigDict(env_file=ENV_FILE)
 
+    JWT_SECRET_KEY: str
+    ALGORITHM: str = "HS256"
+
     @computed_field
     @property
     def DATABASE_URL(self) -> str:
