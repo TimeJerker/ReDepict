@@ -73,9 +73,9 @@ def delete_drawing(db: Session, drawing_id: int) -> bool:
 
 
 # ---------- Анализы (Analyses) ----------
-def create_analysis(db: Session, drawing_id: int, model_name: str, score: int, summary: str, details: dict) -> models.Analysis:
+def create_analysis(db: Session, drawing_id: int, model_name: str, score: int, summary: str) -> models.Analysis:
     analysis = models.Analysis(
-        drawing_id=drawing_id, model=model_name, score=score, summary=summary, details=details
+        drawing_id=drawing_id, model=model_name, score=score, summary=summary
     )
     db.add(analysis)
     # Обновляем статус рисунка на "analyzed"

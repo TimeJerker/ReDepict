@@ -43,7 +43,7 @@ class GeminiAnalysisResult(BaseModel):
         description="Итоговая оценка рисунка по шкале от 1 до 10",
     )
 
-    detailed_analysis: str = Field(
+    summary: str = Field(
         ...,
         description=(
             "Полный, красивый, развернутый и дружелюбный разбор рисунка для пользователя. "

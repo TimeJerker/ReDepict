@@ -8,7 +8,7 @@ from redepict.core.config import settings
 
 client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
-GEMINI_MODEL_NAME = "gemini-1.5-flash"
+GEMINI_MODEL_NAME = "models/gemini-3.8-flash"
 
 SYSTEM_ROLE = """
 Ты — профессиональный художественный критик и в меру строгий преподаватель рисования.
